@@ -1,0 +1,9 @@
+.vscode
+doc
+include
+lib
+bin
+*.obj
+frames
+*.idb
+*.pdb

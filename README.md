@@ -27,7 +27,7 @@ receive.cpp is the main program.
 If you run a program SDL window will pop up.
 
 Now click <kbd>c</kbd> in vulkan engine and enjoy your stream.
-
+![Stream](screen.png)
 # TODO
 Controlling the game from receiver will be added
 

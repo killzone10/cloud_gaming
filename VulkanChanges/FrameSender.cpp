@@ -32,4 +32,8 @@ namespace ve {
     void FrameSender::connect(const std::string& name, uint16_t port) {
         sender.connect(name, port);
     }
+
+    std::optional<std::span<const char>> FrameSender::receive() {
+        return sender.receive();
+    }
 }

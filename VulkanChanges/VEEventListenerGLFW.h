@@ -20,6 +20,7 @@ extern "C" {
 #include "VEncoder1.h"
 #include <atomic>
 #include "FrameSender.h"
+#include <chrono>
 
 namespace ve
 {
@@ -31,6 +32,10 @@ namespace ve
 		* just as you would expect from a first person shooter.
 		*
 		*/
+	extern bool g_restart;
+	extern bool g_win;
+	extern bool g_gameLost;
+
 	class VEEventListenerGLFW : public VEEventListener
 	{
 	protected:
@@ -51,6 +56,11 @@ namespace ve
 		uint8_t comparisionTime = 0;
 		FrameSender sender;
 		std::thread receiveThread;
+		double  velocity{ 0 };
+		double  rotation{ 0 };
+		std::chrono::time_point<std::chrono::high_resolution_clock> time_stamp = std::chrono::high_resolution_clock::now();
+		mutable std::mutex mutex;
+
 
 		//encoder
 
@@ -68,6 +78,10 @@ namespace ve
 		virtual bool onMouseScroll(veEvent event);
 
 		void takeScreenshot();
+		
+		double checkAddVelocity();		
+		double checkAddRotation();
+
 
 		std::vector<uint8_t> screenShootEncoding();
 

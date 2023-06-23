@@ -34,9 +34,8 @@ Every 10 seconds or so send a receiver report to the sender, holding the followi
 */
 static std::atomic<bool> running = true;
 
-int producer(SafeQ<AVFrame*> &q, std::atomic<unsigned int> &amount_of_frames){ // decoding /*
+int producer(SafeQ<AVFrame*> &q, std::atomic<unsigned int> &amount_of_frames, FrameReceiver &s2){ // decoding /*
 
-    FrameReceiver s2{9010};
     Decoder decoder;
     s2.start([&decoder, &q]( unsigned int frame_number, std::span<const char> frame){
         AVFrame* finalFrame;
@@ -44,7 +43,7 @@ int producer(SafeQ<AVFrame*> &q, std::atomic<unsigned int> &amount_of_frames){ /
         q.push(finalFrame);
     });
 
-    while(true){
+    while(running){
         std::this_thread::sleep_for(std::chrono::seconds(10));
         std::cout <<"Amount of frames" << amount_of_frames << " Bit Rate: "<< s2.get_bit_rate() 
                   <<"Total Parts"<< s2.get_summed_parts() << " Unreceived packets: "
@@ -106,16 +105,148 @@ int main(int argc, char* argv[]){
     std::vector<std::thread> workers;
     int i = 0;
     //auto prod = std::async(std::launch::async, producer, std::ref(q), std::ref(port));
-    std::thread prod{producer, std::ref(q), std::ref(amount_of_frames)};
+    FrameReceiver s2{9010};
+
+    std::thread prod{producer, std::ref(q), std::ref(amount_of_frames), std::ref(s2)};
+    bool keys[SDL_NUM_SCANCODES] = { false };
 
     while (running){ 
         SDL_Event event{};
 
         while (SDL_PollEvent(&event)) {
+            Packet2 packet;
+            packet.amount_of_frames = static_cast<float>(amount_of_frames)/10.0;
+            packet.bit_rate = static_cast<float>(s2.get_bit_rate())/10.0;
+            packet.packet_loss = static_cast<float>((s2.get_unreceived_packets())/static_cast<float>(s2.get_summed_parts()));
             /* handle your event here */ 
-            if( event.type == SDL_QUIT )
+            if( event.type == SDL_QUIT ){
                 running = false;
             }
+            else if (event.type == SDL_KEYDOWN){
+                 keys[event.key.keysym.scancode] = true;
+            
+                // switch ( event.key.keysym.sym ) {
+                //     std::cout << event.key.keysym.sym <<std::endl;
+				// 	case SDLK_w:                        
+                //         packet.button = 'w';
+                //         s2.send(packet);
+                      
+                //         break;
+
+				// 	case SDLK_s:
+                //         packet.button = 's';
+                //         s2.send(packet);
+                //         break;
+
+                //     case SDLK_a:
+                //         packet.button = 'a';
+                //         s2.send(packet);
+                //         break;
+
+                //     case SDLK_d:
+                //         packet.button = 'd';
+                //         s2.send(packet);
+                //         break;
+
+                //     default:
+				// 		break;
+				// 	// etc
+				// }
+
+            }
+            else if (event.type == SDL_KEYUP) {
+                keys[event.key.keysym.scancode] = false;
+            }
+            // else if (event.type == SDL_MOUSEMOTION){
+            //     std::cout <<"X " <<event.motion.x << " Y " << event.motion.y <<std::endl;
+            //     packet.button = '2';
+
+            //     int w, h;
+            //     SDL_GetWindowSize(sdlWindow, &w, &h);
+            //     //packet.x = event.motion.x;
+            //     //packet.y = event.motion.y;
+            //     packet.x = static_cast<float>(event.motion.x) / w;
+            //     packet.y = static_cast<float>(event.motion.y) / h;
+            //     s2.send(packet);
+
+
+            // }
+            // else if (event.type == SDL_MOUSEBUTTONDOWN){
+            //     packet.button = '3';
+               
+            //     int w, h;
+            //     SDL_GetWindowSize(sdlWindow, &w, &h);
+            //     //packet.x = event.motion.x;
+            //     //packet.y = event.motion.y;
+            //     packet.x = static_cast<float>(event.motion.x) / w;
+            //     packet.y = static_cast<float>(event.motion.y) / h;
+            //     s2.send(packet);
+
+
+            // }
+            }
+        Packet2 packet;
+        packet.amount_of_frames = static_cast<float>(amount_of_frames)/10.0;
+        packet.bit_rate = static_cast<float>(s2.get_bit_rate())/10.0;
+        packet.packet_loss = static_cast<float>((s2.get_unreceived_packets())/static_cast<float>(s2.get_summed_parts()));
+
+        if (keys[SDL_SCANCODE_W] && keys[SDL_SCANCODE_A]) {
+            packet.button = 'w';
+            s2.send(packet);
+            packet.button = 'a';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_W] && keys[SDL_SCANCODE_D]) {
+            packet.button = 'w';
+            s2.send(packet);
+            packet.button = 'd';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_S] && keys[SDL_SCANCODE_A]) {
+            packet.button = 's';
+            s2.send(packet);
+            packet.button = 'a';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_S] && keys[SDL_SCANCODE_D]) {
+            packet.button = 's';
+            s2.send(packet);
+            packet.button = 'd';
+            s2.send(packet);
+        }
+        else if (keys[SDL_SCANCODE_W]) {
+            packet.button = 'w';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_A]) {
+            packet.button = 'a';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_S]) {
+            packet.button = 's';
+            s2.send(packet);
+        }
+
+        else if (keys[SDL_SCANCODE_D]) {
+            packet.button = 'd';
+            s2.send(packet);
+        }
+         else if (keys[SDL_SCANCODE_R]) {
+            packet.button = 'r';
+            s2.send(packet);
+        }
+        else if (keys[SDL_SCANCODE_ESCAPE]){
+            packet.button = '9';
+            s2.send(packet);
+            running = false;
+
+
+        }
         AVFrame * frame ={nullptr};
         q.pop(frame);
         if (frame != nullptr) {
@@ -137,11 +268,11 @@ int main(int argc, char* argv[]){
         
     }   
 
-    prod.join();
     SDL_DestroyTexture(sdlTexture);
     SDL_DestroyRenderer(sdlRenderer);
     SDL_DestroyWindow(sdlWindow);
     SDL_Quit();
+    prod.join();
 
     return 0;
 

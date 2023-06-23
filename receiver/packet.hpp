@@ -16,5 +16,9 @@ struct Packet2{
     float amount_of_frames{0};
     float bit_rate {0};
     float packet_loss{0};
+    char button {'1'};
+    float x{0};
+    float y{0};
+    
     operator std::span <const char >();
 };

@@ -3,7 +3,12 @@ This program is about streaming a game.
 The game is coded using Vienna Vulkan Engine: https://github.com/hlavacs/ViennaVulkanEngine
 so engine has to be downloaded first.
 
-
+# Sample video:
+# Used technologies
+- SDL2
+- FFMPEG
+- WINSOCKET
+- NUCLEAR
 # How does it work
 ## Sending frames
 In Vienna Vulkan Engine the screenshot is taken every x time (with certain frameRatio), then its encoded using FFMPEG (mpeg4 in my case). Then by using sockets its sent somewhere (IPv4 + UDP). Whats important is that maximally 1400 bytes are sent so frames are divided on smaller parts!.
@@ -28,6 +33,3 @@ If you run a program SDL window will pop up.
 
 Now click <kbd>c</kbd> in vulkan engine and enjoy your stream.
 ![Stream](screen.png)
-# TODO
-Controlling the game from receiver will be added
-

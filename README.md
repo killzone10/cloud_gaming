@@ -29,7 +29,13 @@ Receiver part:
 Use MSVC terminal and run compile1.cmd
 receive.cpp is the main program.
 
-If you run a program SDL window will pop up.
+Run /receive.exe and then  SDL window will pop up.
 
 Now click <kbd>c</kbd> in vulkan engine and enjoy your stream.
-![Stream](screen.png)
+![Stream](screen1.png)
+<kbd>w</kbd> Move forward
+<kbd>s</kbd> Move back
+<kbd>a</kbd> Rotate left
+<kbd>d</kbd> Rotate right
+<kbd>r</kbd> Reset the game
+<kbd>esc</kbd> Quit the game 

@@ -22,7 +22,7 @@ namespace ve {
 			int width;
 			int height;
 			std::string codecName = "mpeg4";
-			int64_t bitrate = 400000;
+			int64_t bitrate = 4000000;
 			AVRational timebase = { 1, 25 };
 			AVRational framerate = { 25, 1 };
 			// the number of pictures in a group of pictures
@@ -39,6 +39,7 @@ namespace ve {
 		explicit VEncoder1(const Config& config);
 		~VEncoder1();
 		using Callback = std::function<void(unsigned int, const char*, size_t)>;
+
 		int encode(const RGBA* picture, Callback callback);
 	private:
 

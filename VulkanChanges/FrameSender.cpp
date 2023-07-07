@@ -11,10 +11,10 @@ namespace ve {
         std::span<const char> part;
         while (offset < data.size()) {
             if (data.size() - offset < DATASIZE) {
-                part = data.subspan(offset, data.size() - offset);
+                part = data.subspan(offset, data.size() - offset); //1400
             }
             else {
-                part = data.subspan(offset, DATASIZE);
+                part = data.subspan(offset, DATASIZE); // <1400
             }
             p.frame_number = frameNumber;
             p.frame_number_part = i;

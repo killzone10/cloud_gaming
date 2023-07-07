@@ -36,6 +36,9 @@ namespace ve
 	extern bool g_win;
 	extern bool g_gameLost;
 
+	extern int clickX;
+	extern int clickY;
+
 	class VEEventListenerGLFW : public VEEventListener
 	{
 	protected:
@@ -60,8 +63,7 @@ namespace ve
 		double  rotation{ 0 };
 		std::chrono::time_point<std::chrono::high_resolution_clock> time_stamp = std::chrono::high_resolution_clock::now();
 		mutable std::mutex mutex;
-
-
+		
 		//encoder
 
 		std::unique_ptr<VEncoder1> encoder;
@@ -89,6 +91,12 @@ namespace ve
 		///Constructor
 		VEEventListenerGLFW(std::string name);
 		
+		
+
+		int getClickX();
+		int getClickY();
+
+		void resetClicks();
 
 		///Destructor
 		virtual ~VEEventListenerGLFW() ;

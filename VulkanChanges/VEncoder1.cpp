@@ -69,6 +69,7 @@ namespace ve {
 		if (context) {
 			avcodec_free_context(&context);
 		}
+
 	}
 
 
@@ -121,7 +122,9 @@ namespace ve {
 			}	
 
 			//file->write(reinterpret_cast<char*>(packet->data), packet->size);
+			//callback(frameCounter, reinterpret_cast<const char*>(packet->data), packet->size);
 			callback(frameCounter, reinterpret_cast<const char*>(packet->data), packet->size);
+
 			av_packet_unref(packet);
 		}
 

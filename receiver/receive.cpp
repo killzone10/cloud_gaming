@@ -124,66 +124,51 @@ int main(int argc, char* argv[]){
             }
             else if (event.type == SDL_KEYDOWN){
                  keys[event.key.keysym.scancode] = true;
-            
-                // switch ( event.key.keysym.sym ) {
-                //     std::cout << event.key.keysym.sym <<std::endl;
-				// 	case SDLK_w:                        
-                //         packet.button = 'w';
-                //         s2.send(packet);
-                      
-                //         break;
-
-				// 	case SDLK_s:
-                //         packet.button = 's';
-                //         s2.send(packet);
-                //         break;
-
-                //     case SDLK_a:
-                //         packet.button = 'a';
-                //         s2.send(packet);
-                //         break;
-
-                //     case SDLK_d:
-                //         packet.button = 'd';
-                //         s2.send(packet);
-                //         break;
-
-                //     default:
-				// 		break;
-				// 	// etc
-				// }
-
+                 
             }
             else if (event.type == SDL_KEYUP) {
                 keys[event.key.keysym.scancode] = false;
             }
-            // else if (event.type == SDL_MOUSEMOTION){
-            //     std::cout <<"X " <<event.motion.x << " Y " << event.motion.y <<std::endl;
-            //     packet.button = '2';
+            else if (event.type == SDL_MOUSEMOTION){
+                packet.button = '2';
 
-            //     int w, h;
-            //     SDL_GetWindowSize(sdlWindow, &w, &h);
-            //     //packet.x = event.motion.x;
-            //     //packet.y = event.motion.y;
-            //     packet.x = static_cast<float>(event.motion.x) / w;
-            //     packet.y = static_cast<float>(event.motion.y) / h;
-            //     s2.send(packet);
+                int w, h;
+                SDL_GetWindowSize(sdlWindow, &w, &h);
+                packet.x = event.motion.x;
+                packet.y = event.motion.y;
+                // packet.x = static_cast<float>(event.motion.x) / w;
+                // packet.y = static_cast<float>(event.motion.y) / h;
+                s2.send(packet);
 
 
-            // }
-            // else if (event.type == SDL_MOUSEBUTTONDOWN){
-            //     packet.button = '3';
+            }
+            else if (event.type == SDL_MOUSEBUTTONDOWN){
+                packet.button = '3';
                
-            //     int w, h;
-            //     SDL_GetWindowSize(sdlWindow, &w, &h);
-            //     //packet.x = event.motion.x;
-            //     //packet.y = event.motion.y;
-            //     packet.x = static_cast<float>(event.motion.x) / w;
-            //     packet.y = static_cast<float>(event.motion.y) / h;
-            //     s2.send(packet);
+                int w, h;
+                SDL_GetWindowSize(sdlWindow, &w, &h);
+                packet.x = event.motion.x;
+                packet.y = event.motion.y;
+                // packet.x = static_cast<float>(event.motion.x) / w;
+                // packet.y = static_cast<float>(event.motion.y) / h;
+                s2.send(packet);
 
 
-            // }
+            }
+             else if (event.type == SDL_MOUSEBUTTONUP){
+                packet.button = '4';
+               
+                int w, h;
+                SDL_GetWindowSize(sdlWindow, &w, &h);
+                packet.x = event.motion.x;
+                packet.y = event.motion.y;
+                // packet.x = static_cast<float>(event.motion.x) / w;
+                // packet.y = static_cast<float>(event.motion.y) / h;
+                s2.send(packet);
+
+
+            }
+
             }
         Packet2 packet;
         packet.amount_of_frames = static_cast<float>(amount_of_frames)/10.0;

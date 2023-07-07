@@ -21,11 +21,7 @@ namespace ve
 	VEEventListenerGLFW::VEEventListenerGLFW(std::string name)
 		: VEEventListener(name) {
 		VEncoder1::Config conf(800, 600);
-		// make config
-		//conf.width = 800;
-		//conf.height = 600;
-		// 
-		//conf.filename = "rokoko";
+	
 		encoder = std::make_unique<VEncoder1>(conf);
 		sender.connect("127.0.0.1", 9010);
 		receiveThread = std::thread {[this]() {
@@ -35,7 +31,9 @@ namespace ve
 				auto data = sender.receive();
 				if (data.has_value() && (*data).size() >= sizeof(Packet2)) {
 					auto packet = reinterpret_cast<const Packet2*>((*data).data());
-					//std::cout << "amount of frames" << packet->amount_of_frames << " bit rate: " << packet->bit_rate << "loss: " << packet->packet_loss << "button" << packet->button << std::endl;
+					VESubrender_Nuklear* pSubrender = (VESubrender_Nuklear*)getEnginePointer()->getRenderer()->getOverlay();
+					struct nk_context* ctx = pSubrender->getContext();
+
 					// keyboard
 					if (packet->button != '1') {
 
@@ -43,13 +41,8 @@ namespace ve
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_W;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
-
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 						}
@@ -58,27 +51,18 @@ namespace ve
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_S;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 
 						}
 						if (packet->button == 'a') {
-
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_A;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 
@@ -88,12 +72,8 @@ namespace ve
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_D;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 
@@ -102,12 +82,8 @@ namespace ve
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_R;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 						}
@@ -115,85 +91,96 @@ namespace ve
 							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_KEYBOARD);
 							event.idata1 = GLFW_KEY_ESCAPE;
 							event.idata3 = GLFW_PRESS;
-							//event.dt = 0.01;
-							//onKeyboard(event);
 							auto window = getWindowPointer();
-							//event.ptr = w1->getWindowHandle();
 							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-							//w1->key_callbackGLFW(w1->getWindowHandle(), GLFW_KEY_W, 0, GLFW_PRESS, 0);
 							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 							app->processEvent(event);
 
 						}
 
-						// mouse movement events
-						//if (packet->button == '2') {
-						//	auto window = getWindowPointer();
-						//	auto w1 = dynamic_cast <VEWindowGLFW*> (window);
-						//	auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
-						//	std::cout << "jestem w 2" << std::endl;
-						//	veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_MOUSEMOVE);
+						// mouse movement events 2 is 
 
-						//	event.fdata1 = packet->x;
-						//	event.fdata2 = packet->y;
-						//	std::cout << packet->x << std::endl;
-						//	event.ptr = w1->getWindowHandle();
+						if (packet->button == '2') {
+							// aproach 1 
+							// 
+							// 
+							//	auto window = getWindowPointer();
+							//	auto w1 = dynamic_cast <VEWindowGLFW*> (window);
+							//	auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
+							////	std::cout << "jestem w 2" << std::endl;
+							//	veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_MOUSEMOVE);
 
+							//	event.fdata1 = packet->x;
+							//	event.fdata2 = packet->y;
+							//	event.ptr = w1->getWindowHandle();
+							//	app->processEvent(event);
 
-						//	int xpos, ypos;
-						//	glfwGetWindowPos(w1->getWindowHandle(), &xpos, &ypos);
-						//	int width, height;
-						//	glfwGetWindowSize(w1->getWindowHandle(), &width, &height);
-						//	//event.ptr = w1->getWindowHandle();
-						//	auto winWindow = glfwGetWin32Window(w1->getWindowHandle());
+							// approach 2 The correct one
+							// 
+								//nk_input_begin(ctx);
+								//click
+								//nk_input_motion(ctx, packet->x, packet->y);
+								//nk_input_end(ctx);
 
-						//	xpos += width * packet->x;
-						//	ypos +=height* packet->y;
-						//	std::cout << "XPOS::" << xpos << " YPOS" << ypos << std::endl;
-						//	INPUT input {};
-						//	input.type = INPUT_MOUSE;
-						//	input.mi.dx = xpos;
-						//	input.mi.dy = ypos;
-						//	input.mi.dwFlags = MOUSEEVENTF_MOVE;
-						//	PostMessage(winWindow, WM_MOUSEMOVE, 0, MAKELPARAM(xpos, ypos));
+						}
+						// mouse click
+						if (packet->button == '3') {
+							// diferent approach
+							// 
+							//	auto window = getWindowPointer();
+							//	veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_MOUSEBUTTON);
 
-						//	//UINT uSent = SendInput(1, &input, sizeof(INPUT));
-						//	//w1->cursor_pos_callbackGLFW(w1->getWindowHandle(), packet->x, packet->y);
-						//	//getEnginePointer()->addEvent(event);
+							//	auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
 
-						//	//app->processEvent(event);
-						//	//auto engine = getEnginePointer();
-						//	//onMouseMove(event);
-						//}
+							//	//w1->mouse_button_callback(w1->getWindowHandle(), 0, GLFW_PRESS, 0);
+							////	//veEvent event(veEvent::VE_EVENT_SUBSYSTEM_GLFW, veEvent::VE_EVENT_MOUSEBUTTON);
+							//	event.idata1 = 0;
+							//	event.idata3 = GLFW_PRESS;
+							//	event.idata4 = 0;
+							//	event.fdata1 = packet->x;
+							//	event.fdata2 = packet->y;
+							//	event.ptr = w1->getWindowHandle();
+							//	auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
 
-						//if (packet->button == '3') {
-						//	std::cout << "jestem w 3" << std::endl;	
-						//	auto window = getWindowPointer();
-						//	veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_MOUSEBUTTON);
-
-						//	auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
-
-						//	//w1->mouse_button_callback(w1->getWindowHandle(), 0, GLFW_PRESS, 0);
-						//	//veEvent event(veEvent::VE_EVENT_SUBSYSTEM_GLFW, veEvent::VE_EVENT_MOUSEBUTTON);
-						//	event.idata1 = 0;
-						//	event.idata3 = GLFW_PRESS;
-						//	event.idata4 = 0;
-						//	event.fdata1 = packet->x;
-						//	event.fdata2 = packet->y;
-						//	event.ptr = w1->getWindowHandle();
-						//	auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
-
-						//	app->processEvent(event);
+							//	app->processEvent(event);
+					
+							clickX = static_cast<int>(packet->x);
+							clickY = static_cast<int>(packet->y);
 
 
-						//}
+
+						}
+						if (packet->button == '4') {
+							// RELEASE NOT NEEDED AT ALL
+							auto window = getWindowPointer();
+							veEvent event(ve::veEvent::VE_EVENT_SUBSYSTEM_GLFW, ve::veEvent::VE_EVENT_MOUSEBUTTON);
+
+							auto w1 = reinterpret_cast <VEWindowGLFW*> (window);
+
+					
+							event.idata1 = 0;
+							event.idata3 = GLFW_PRESS;
+							event.idata4 = 0;
+							event.fdata1 = packet->x;
+							event.fdata2 = packet->y;
+							event.ptr = w1->getWindowHandle();
+							auto app = reinterpret_cast<VEWindowGLFW*>(glfwGetWindowUserPointer(w1->getWindowHandle()));
+
+							app->processEvent(event);
+							
+
+							nk_input_begin(ctx);
+							//click
+							nk_input_button(ctx, nk_buttons::NK_BUTTON_LEFT, packet->x, packet->y, 0);
+							nk_input_motion(ctx, 0, 0);
+
+							nk_input_end(ctx);
+						}
+
+
 
 
 					}
-					
-					// mouse click
-					
-					// contorl over frame rate
 					else {
 						if (packet->amount_of_frames < 24) {
 							frameRatio = 1 / 27;
@@ -206,6 +193,7 @@ namespace ve
 					
 				
 				}
+
 				std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
 			}
@@ -318,10 +306,7 @@ namespace ve
 				}
 
 				break;
-				//case GLFW_KEY_W:
-				//	translate = pCamera->getTransform() * glm::vec4(0.0, 0.0, 1.0, 1.0); //forward
-				//	translate.y = 0.0f;
-				//	break;
+		
 			case GLFW_KEY_W:
 				double v;
 				v = 0.01;
@@ -407,6 +392,7 @@ namespace ve
 		*/
 	bool VEEventListenerGLFW::onMouseMove(veEvent event)
 	{
+		
 		if (!m_rightButtonClicked)
 			return false; //only do something if left mouse button is pressed
 
@@ -605,14 +591,7 @@ namespace ve
 
 					});
 
-				//encoder->encode(reinterpret_cast<VEncoder1::RGBA*>(v.data()));
-			
-			/*	av_image_fill_arrays(frame->data,
-					frame->linesize, image,
-					AV_PIX_FMT_RGB24, 800,800, 1);
-				frame->pts = i;
-				i++;*/
-				//encode(c, frame, pkt, f);
+				
 
 			}
 		}
@@ -659,7 +638,6 @@ namespace ve
 	}
 	
 	VEEventListenerGLFW::~VEEventListenerGLFW() {
-		std::cout << "dzier¿¹¿nia" << std::endl;
 		Rododendron = false;
 		receiveThread.join();
 	}
@@ -687,6 +665,18 @@ namespace ve
 		return rot;
 	};
 
+
+	int VEEventListenerGLFW::getClickX() {
+		return clickX;
+	}
+	int VEEventListenerGLFW:: getClickY() {
+		return clickY;
+	}
+
+	void VEEventListenerGLFW::resetClicks() {
+		clickX = -1;
+		clickY = -1;
+	}
 
 } // namespace ve
 

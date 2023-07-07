@@ -39,3 +39,5 @@ Now click <kbd>c</kbd> in vulkan engine and enjoy your stream.
 <kbd>d</kbd> Rotate right
 <kbd>r</kbd> Reset the game
 <kbd>esc</kbd> Quit the game 
+
+The mouse input works too. All of the nuclear buttons can be clicked 

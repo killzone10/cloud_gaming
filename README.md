@@ -4,6 +4,7 @@ The game is coded using Vienna Vulkan Engine: https://github.com/hlavacs/ViennaV
 so engine has to be downloaded first.
 
 # Sample video:
+[https://www.youtube.com/watch?v=eyhvCYZXkOk](https://youtu.be/eyhvCYZXkOk?t=677)   from 11:20 to 12:50
 # Used technologies
 - SDL2
 - FFMPEG

@@ -17,8 +17,9 @@ In Vienna Vulkan Engine the screenshot is taken every x time (with certain frame
 On the other side there is a receiver which wait for the packets. Receiver  combines the packets into frames, decodes it and in the end sends it to SafeQueue (queue of frames). Another thread waits till queue has some values in it and then reads whats in that. 
 
 ## Sending information back
-Receiver can send informations back (its stream, and its going to be developed further to control the game) as for now it sends back to sender basic information about frames.
+Receiver can send informations back - it sends back the mouse and keyboard input. Futhermore if there is packet loss it sends information that it needs more frames!
 
+## The game is in 100% playable from stream window.
 
 ## How to run
 
